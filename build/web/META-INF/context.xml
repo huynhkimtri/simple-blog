@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/SimpleBlog">
+    <Resource name="SimpleBlog" 
+              type="javax.sql.DataSource" 
+              driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+              auth="Container" 
+              url="jdbc:sqlserver://localhost:1433;databaseName=SimpleBlog"
+              username="sa" 
+              password="123123123" />
+</Context>
