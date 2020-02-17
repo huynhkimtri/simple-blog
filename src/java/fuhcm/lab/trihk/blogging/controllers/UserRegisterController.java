@@ -7,6 +7,8 @@ package fuhcm.lab.trihk.blogging.controllers;
 
 import fuhcm.lab.trihk.blogging.daos.UserDAO;
 import fuhcm.lab.trihk.blogging.dtos.UserDTO;
+import fuhcm.lab.trihk.blogging.utilities.Constants;
+import fuhcm.lab.trihk.blogging.utilities.HashCryptUtility;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -18,6 +20,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -25,12 +28,14 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "UserRegisterController", urlPatterns = {"/UserRegisterController"})
 public class UserRegisterController extends HttpServlet {
-    
+
     private final String emailInput = "txtEmail";
     private final String firstNameInput = "txtFirstName";
     private final String lastNameInput = "txtLastName";
     private final String passwordInput = "txtPassword";
-    private final String loginPage = "login.html";
+    private final String confirmPasswordInput = "txtConfirmPassword";
+    private final String homePage = "blog-home.jsp";
+    private final String registerPage = "register.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -45,18 +50,51 @@ public class UserRegisterController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String path = "";
+            String path = registerPage;
             try {
                 String email = request.getParameter(emailInput).trim();
                 String firstName = request.getParameter(firstNameInput).trim();
                 String lastName = request.getParameter(lastNameInput).trim();
                 String password = request.getParameter(passwordInput).trim();
-                UserDTO dto = new UserDTO(email, password, firstName, lastName);
-                UserDAO dao = new UserDAO();
-                boolean result = dao.createUser(dto);
-                if (result) {
-                    path = loginPage;
+                String confirmPassword = request.getParameter(confirmPasswordInput).trim();
+
+                if (confirmPassword.length() > 0 && password.length() > 0) {
+
+                    if (!confirmPassword.equals(password)) {
+                        request.setAttribute("MSG_ERROR", Constants.MSG_MATCHING_PWD);
+                    } else {
+                        if (password.length() < 8) {
+                            request.setAttribute("MSG_ERROR", Constants.MSG_INVALID_PWD);
+                        } else {
+                            UserDAO dao = new UserDAO();
+                            boolean checkExisted = dao.checkExistedEmail(email);
+                            if (!checkExisted) {
+                                HashCryptUtility cryptUtility = new HashCryptUtility();
+                                String pwsEncrypt = cryptUtility.encryptSHA256(password);
+                                UserDTO dto = new UserDTO(email, pwsEncrypt, firstName, lastName);
+
+                                boolean result = dao.createUser(dto);
+                                if (result) {
+                                    HttpSession session = request.getSession();
+                                    if ((UserDTO) session.getAttribute("USER") != null) {
+                                        session.removeAttribute("USER");
+                                    }
+                                    path = homePage;
+                                }
+                            } else {
+                                request.setAttribute("MSG_ERROR", Constants.MSG_EXISTED_EMAIL);
+                            }
+                        }
+                    }
+                } else {
+                    request.setAttribute("MSG_ERROR", Constants.MSG_BLANK_PWD);
                 }
+                if (path.equals(registerPage)) {
+                    request.setAttribute("LASTED_EMAIL", email);
+                    request.setAttribute("LASTED_FIRST_NAME", firstName);
+                    request.setAttribute("LASTED_LAST_NAME", lastName);
+                }
+
             } catch (SQLException e) {
                 Logger.getLogger(UserRegisterController.class.getName()).log(Level.SEVERE, null, e);
             } finally {

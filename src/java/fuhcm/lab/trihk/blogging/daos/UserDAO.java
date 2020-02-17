@@ -6,7 +6,7 @@
 package fuhcm.lab.trihk.blogging.daos;
 
 import fuhcm.lab.trihk.blogging.dtos.UserDTO;
-import fuhcm.lab.trihk.blogging.utilities.ConstantsUtils;
+import fuhcm.lab.trihk.blogging.utilities.Constants;
 import fuhcm.lab.trihk.blogging.utilities.DatabaseUtility;
 import java.io.Serializable;
 import java.sql.Connection;
@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 import javax.naming.NamingException;
 
 /**
- * 
+ *
  * @author huynhkimtri
  */
 public class UserDAO implements Serializable {
@@ -31,10 +31,13 @@ public class UserDAO implements Serializable {
     private final String sqlInsert
             = "INSERT INTO [SimpleBlog].[dbo].[tblUsers]"
             + "([email], [firstName], [lastName], [password], [role], [status]) "
-            + "VALUE(?, ?, ?, ?, ?, ?)";
+            + "VALUES(?, ?, ?, ?, ?, ?)";
 
     private final String sqlUpdateStatus
             = "UPDATE [dbo].[tblUsers] SET [status] = ? WHERE [email] = ?";
+
+    private final String sqlFindByEmail
+            = "SELECT [email] FROM [SimpleBlog].[dbo].[tblUsers] WHERE [email] = ?";
 
     public UserDTO checkLogin(String email, String password) throws SQLException {
         Connection connection = null;
@@ -71,31 +74,62 @@ public class UserDAO implements Serializable {
         return null;
     }
 
-    public boolean createUser(UserDTO createdUser) throws SQLException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
+    public boolean checkExistedEmail(String email) throws SQLException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
-            connection = DatabaseUtility.initConnection();
-            if (connection != null) {
-                preparedStatement = connection.prepareStatement(sqlInsert);
-                preparedStatement.setString(1, createdUser.getEmail());
-                preparedStatement.setString(2, createdUser.getPassword());
-                preparedStatement.setString(3, createdUser.getFirstName());
-                preparedStatement.setString(4, createdUser.getLastName());
-                preparedStatement.setString(5, ConstantsUtils.USER_ROLE_MEMBER);
-                preparedStatement.setString(6, ConstantsUtils.USER_STATUS_NEW);
-                int row = preparedStatement.executeUpdate();
+            con = DatabaseUtility.initConnection();
+            if (con != null) {
+                ps = con.prepareStatement(sqlFindByEmail);
+                ps.setString(1, email);
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    return true;
+                }
+            }
+        } catch (SQLException | NamingException e) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return false;
+    }
+
+    public boolean createUser(UserDTO user) throws SQLException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = DatabaseUtility.initConnection();
+            if (con != null) {
+                ps = con.prepareStatement(sqlInsert);
+                ps.setString(1, user.getEmail());
+                ps.setString(2, user.getFirstName());
+                ps.setString(3, user.getLastName());
+                ps.setString(4, user.getPassword());
+                ps.setString(5, Constants.USER_ROLE_MEMBER);
+                ps.setString(6, Constants.USER_STATUS_NEW);
+                int row = ps.executeUpdate();
                 if (row > 0) {
                     return true;
                 }
             }
         } catch (SQLException | NamingException e) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
         } finally {
-            if (preparedStatement != null) {
-                preparedStatement.close();
+            if (ps != null) {
+                ps.close();
             }
-            if (connection != null) {
-                connection.close();
+            if (con != null) {
+                con.close();
             }
         }
         return false;

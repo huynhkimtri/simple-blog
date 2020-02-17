@@ -23,7 +23,7 @@ public class MainController extends HttpServlet {
 
     private final String LOGIN = "Sign in";
     private final String REGISTER = "Sign up";
-    private final String LOGOUT = "Logout";
+    private final String LOGOUT = "Sign out";
     private final String homePage = "blog-home.jsp";
     private final String userLoginController = "UserLoginController";
     private final String userRegisterController = "UserRegisterController";

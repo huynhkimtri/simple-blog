@@ -19,10 +19,18 @@
         <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     </head>
     <body>
+        <c:set value="${sessionScope.USER}" var="user" />
+        <c:if test="${not empty user}">
+            <c:choose>
+                <c:when test="${user.role eq 'admin'}">
+                    <%--<c:redirect url="admin.jsp"/>--%>
+                </c:when>
+            </c:choose>
+        </c:if>
         <!-- Navigation -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
             <div class="container">
-                <a class="navbar-brand" href="#">Simple Blog</a>
+                <a class="navbar-brand" href="">Simple Blog</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                         aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -34,12 +42,34 @@
                                 <span class="sr-only">(current)</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="login.jsp">Sign in</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="register.jsp">Sign up</a>
-                        </li>
+                        <c:choose>
+                            <c:when test="${not empty user.firstName and not empty user.lastName}">
+                                <li class="nav-item">
+                                    <div class="dropdown">
+                                        <a class="nav-link dropdown-toggle" 
+                                           href="#" role="button" id="dropdownMenuLink" 
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            ${firstName}&nbsp;${lastName}
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="#">Write article</a>
+                                            <a class="dropdown-item" href="#">Profile</a>
+                                            <div class="dropdown-divider"></div>
+                                            <c:set value="MainController?action=Sign out" var="urlSignOut" />
+                                            <a class="dropdown-item" href="${urlSignOut}" >Sign out</a>
+                                        </div>
+                                    </div> 
+                                </li>
+                            </c:when>
+                            <c:otherwise>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="login.jsp">Sign in</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="register.jsp">Sign up</a>
+                                </li>
+                            </c:otherwise>
+                        </c:choose>
                     </ul>
                 </div>
             </div>
@@ -162,7 +192,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
 
             </div>

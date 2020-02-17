@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,7 +23,7 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "UserLogoutController", urlPatterns = {"/UserLogoutController"})
 public class UserLogoutController extends HttpServlet {
 
-    private final String homePage = "home.jsp";
+    private final String homePage = "blog-home.jsp";
     private final String errorPage = "500.html";
 
     /**
@@ -43,9 +42,9 @@ public class UserLogoutController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             HttpSession session = request.getSession();
             try {
-                String userEmail = (String) session.getAttribute("USER_NAME");
+                String userEmail = (String) session.getAttribute("USER");
                 if (userEmail != null) {
-                    session.removeAttribute("USER_NAME");
+                    session.removeAttribute("USER");
                     path = homePage;
                 }
             } catch (Exception e) {

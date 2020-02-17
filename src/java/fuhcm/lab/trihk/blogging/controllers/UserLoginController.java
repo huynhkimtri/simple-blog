@@ -7,6 +7,7 @@ package fuhcm.lab.trihk.blogging.controllers;
 
 import fuhcm.lab.trihk.blogging.daos.UserDAO;
 import fuhcm.lab.trihk.blogging.dtos.UserDTO;
+import fuhcm.lab.trihk.blogging.utilities.Constants;
 import fuhcm.lab.trihk.blogging.utilities.HashCryptUtility;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,18 +28,12 @@ import javax.servlet.http.HttpSession;
  */
 @WebServlet(name = "UserLoginController", urlPatterns = {"/UserLoginController"})
 public class UserLoginController extends HttpServlet {
-    
-    private final String ADMIN = "admin";
-    private final String MEMBER = "memeber";
-    private final String ACTIVE = "active";
-    private final String NEW = "new";
+
     private final String homePage = "blog-home.jsp";
     private final String adminPage = "admin.jsp";
     private final String incorrectPage = "login.jsp";
     private final String emailInput = "txtEmail";
     private final String pwdInput = "txtPassword";
-    private final String msgIncorrect = "Incorrect email or password!";
-    private final String msgInactive = "Your account is inactive. Contact your administrator to activate it";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -62,19 +57,24 @@ public class UserLoginController extends HttpServlet {
                 String pwsEncrypt = cryptUtility.encryptSHA256(password);
                 UserDTO user = dao.checkLogin(email, pwsEncrypt);
                 if (user != null) {
-                    if (user.getStatus().equals(NEW)) { // new
-                        request.setAttribute("ERROR", msgInactive);
-                    } else { // active
-                        if (user.getRole().equals(ADMIN)) { // admin
-                            path = adminPage;
-                        } else { // member
-                            path = homePage;
-                        }
+                    if (user.getStatus().equals(Constants.USER_STATUS_ACTIVE)) {
                         HttpSession session = request.getSession();
-                        session.setAttribute("USER_NAME", user.getFirstName() + "&nbsp;" + user.getLastName());
+                        session.setAttribute("USER", user);
+                        switch (user.getRole()) {
+                            case Constants.USER_ROLE_ADMIN:
+                                path = adminPage;
+                                break;
+                            case Constants.USER_ROLE_MEMBER:
+                                path = homePage;
+                                break;
+                        }
+                    } else {
+                        request.setAttribute("ERROR", Constants.MSG_INACTIVE);
+                        request.setAttribute("LASTED_EMAIL", email);
                     }
                 } else {
-                    request.setAttribute("ERROR", msgIncorrect);
+                    request.setAttribute("ERROR", Constants.MSG_INCORRECT);
+                    request.setAttribute("LASTED_EMAIL", email);
                 }
             } catch (SQLException e) {
                 Logger.getLogger(UserLoginController.class.getName()).log(Level.SEVERE, null, e);
