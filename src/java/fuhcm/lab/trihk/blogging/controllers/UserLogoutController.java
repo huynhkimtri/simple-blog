@@ -5,6 +5,7 @@
  */
 package fuhcm.lab.trihk.blogging.controllers;
 
+import fuhcm.lab.trihk.blogging.dtos.UserDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -42,8 +43,8 @@ public class UserLogoutController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             HttpSession session = request.getSession();
             try {
-                String userEmail = (String) session.getAttribute("USER");
-                if (userEmail != null) {
+                UserDTO user = (UserDTO) session.getAttribute("USER");
+                if (user != null) {
                     session.removeAttribute("USER");
                     path = homePage;
                 }

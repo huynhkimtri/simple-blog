@@ -18,14 +18,15 @@ public class ArticleDTO implements Serializable {
     private String title;
     private String description;
     private String content;
-    private Date publishedDate;
-    private Date createdDate;
+    private String publishedDate;
+    private String createdDate;
+    private String authorEmail;
     private String status;
 
     public ArticleDTO() {
     }
 
-    public ArticleDTO(int id, String title, String description, String content, Date publishedDate, Date createdDate, String status) {
+    public ArticleDTO(int id, String title, String description, String content, String publishedDate, String createdDate, String status) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -35,11 +36,31 @@ public class ArticleDTO implements Serializable {
         this.status = status;
     }
 
-    public ArticleDTO(int id, String title, String description, Date publishedDate) {
+    public ArticleDTO(int id, String title, String description, String publishedDate) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.publishedDate = publishedDate;
+    }
+
+    public ArticleDTO(String title, String description, String content, String createdDate, String authorEmail, String status) {
+        this.title = title;
+        this.description = description;
+        this.content = content;
+        this.createdDate = createdDate;
+        this.authorEmail = authorEmail;
+        this.status = status;
+    }
+
+    public ArticleDTO(int id, String title, String description, String content, String publishedDate, String createdDate, String authorEmail, String status) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.content = content;
+        this.publishedDate = publishedDate;
+        this.createdDate = createdDate;
+        this.authorEmail = authorEmail;
+        this.status = status;
     }
 
     public int getId() {
@@ -74,19 +95,19 @@ public class ArticleDTO implements Serializable {
         this.content = content;
     }
 
-    public Date getPublishedDate() {
+    public String getPublishedDate() {
         return publishedDate;
     }
 
-    public void setPublishedDate(Date publishedDate) {
+    public void setPublishedDate(String publishedDate) {
         this.publishedDate = publishedDate;
     }
 
-    public Date getCreatedDate() {
+    public String getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -96,6 +117,14 @@ public class ArticleDTO implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getAuthorEmail() {
+        return authorEmail;
+    }
+
+    public void setAuthorEmail(String authorEmail) {
+        this.authorEmail = authorEmail;
     }
 
     @Override

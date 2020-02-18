@@ -22,7 +22,7 @@
                     <c:redirect url="admin.jsp"/>
                 </c:when>
                 <c:otherwise>
-                    <c:redirect url="/"/>
+                    <c:redirect url="MainController?action=home"/>
                 </c:otherwise>
             </c:choose>
         </c:if>
@@ -31,10 +31,10 @@
                 <div class="auth-form-header">
                     <h1>Sign in to Simple Blog</h1>
                 </div>
-                <c:set value="${requestScope.ERROR}" var="error"/>
+                <c:set value="${requestScope.MSG_ERROR}" var="msg"/>
                 <c:set value="${requestScope.LASTED_EMAIL}" var="lastedEmail"/>
-                <c:if test="${not empty error}">
-                    <div class="alert alert-danger" role="alert">${error}</div>
+                <c:if test="${not empty msg}">
+                    <div class="alert alert-danger" role="alert">${msg}</div>
                 </c:if>
                 <div class="auth-form-body mt-3">
                     <form action="MainController" method="post">
@@ -50,10 +50,10 @@
                         </c:if>
                         <label for="password">Password<a class="label-link" href="/password_reset">Forgot password?</a></label>
                         <input type="password" id="password" name="txtPassword" class="form-control input-block" required>
-                        <input class="btn btn-primary btn-signin btn-block" type="submit" name="action" value="Sign in" />
+                        <button type="submit" class="btn btn-primary btn-signin btn-block" name="action" value="login">Sign in</button>
                     </form>
                 </div>
-                <p class="create-account-callout mt-3">New to SimleBlog? <a href="register.jsp">Create an account.</a></p>
+                <p class="create-account-callout mt-3">New to SimpleBlog? <a href="register.jsp">Create an account.</a></p>
             </div>
         </div>
     </body>

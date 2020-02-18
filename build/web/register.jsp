@@ -53,7 +53,7 @@
                         <input type="password" id="password" name="txtPassword" class="form-control input-block" required>
                         <label for="confirmPassword">Confirm Password</label>
                         <input type="password" id="confirmPassword" name="txtConfirmPassword" class="form-control input-block" required>
-                        <input class="btn btn-primary btn-signin btn-block" type="submit" name="action" value="Sign up" />
+                        <button type="submit" class="btn btn-primary btn-signup btn-block" name="action" value="register">Sign up</button>
                     </form>
                 </div>
                 <p class="signin-callout mt-3"><a href="login.jsp">I already have a membership.</a></p>

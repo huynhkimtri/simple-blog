@@ -32,8 +32,8 @@ public class UserLoginController extends HttpServlet {
     private final String homePage = "blog-home.jsp";
     private final String adminPage = "admin.jsp";
     private final String incorrectPage = "login.jsp";
-    private final String emailInput = "txtEmail";
-    private final String pwdInput = "txtPassword";
+    private final String iEmail = "txtEmail";
+    private final String iPassword = "txtPassword";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -50,8 +50,8 @@ public class UserLoginController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             String path = incorrectPage;
             try {
-                String email = request.getParameter(emailInput);
-                String password = request.getParameter(pwdInput);
+                String email = request.getParameter(iEmail);
+                String password = request.getParameter(iPassword);
                 UserDAO dao = new UserDAO();
                 HashCryptUtility cryptUtility = new HashCryptUtility();
                 String pwsEncrypt = cryptUtility.encryptSHA256(password);
@@ -69,11 +69,12 @@ public class UserLoginController extends HttpServlet {
                                 break;
                         }
                     } else {
-                        request.setAttribute("ERROR", Constants.MSG_INACTIVE);
-                        request.setAttribute("LASTED_EMAIL", email);
+                        request.setAttribute("MSG_ERROR", Constants.MSG_INACTIVE);
                     }
                 } else {
-                    request.setAttribute("ERROR", Constants.MSG_INCORRECT);
+                    request.setAttribute("MSG_ERROR", Constants.MSG_INCORRECT);
+                }
+                if (path.equals(incorrectPage)) {
                     request.setAttribute("LASTED_EMAIL", email);
                 }
             } catch (SQLException e) {

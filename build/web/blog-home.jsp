@@ -25,6 +25,10 @@
                 <c:when test="${user.role eq 'admin'}">
                     <%--<c:redirect url="admin.jsp"/>--%>
                 </c:when>
+                <c:when test="${user.role eq 'member'}">
+                    <c:set value="${user.firstName}" var="firstName"/>
+                    <c:set value="${user.lastName}" var="lastName"/>
+                </c:when>
             </c:choose>
         </c:if>
         <!-- Navigation -->
@@ -43,7 +47,7 @@
                             </a>
                         </li>
                         <c:choose>
-                            <c:when test="${not empty user.firstName and not empty user.lastName}">
+                            <c:when test="${not empty firstName and not empty lastName}">
                                 <li class="nav-item">
                                     <div class="dropdown">
                                         <a class="nav-link dropdown-toggle" 
@@ -52,11 +56,11 @@
                                             ${firstName}&nbsp;${lastName}
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="#">Write article</a>
+                                            <a class="dropdown-item" href="MainController?action=write-blog">Write article</a>
                                             <a class="dropdown-item" href="#">Profile</a>
                                             <div class="dropdown-divider"></div>
-                                            <c:set value="MainController?action=Sign out" var="urlSignOut" />
-                                            <a class="dropdown-item" href="${urlSignOut}" >Sign out</a>
+                                            <c:set value="MainController?action=logout" var="url"/>
+                                            <a class="dropdown-item" href="${url}" >Sign out</a>
                                         </div>
                                     </div> 
                                 </li>
@@ -148,42 +152,7 @@
                     <div class="card my-4">
                         <h5 class="card-header">Search</h5>
                         <div class="card-body">
-                            <p style="margin-bottom: 0; font-weight: bold" class="mb-1">Status:</p>
-                            <div class="row mb-2">
-                                <div class="col-lg-6">
-                                    <ul class="list-unstyled mb-0">
-                                        <li>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="cbxAll">
-                                                <label class="custom-control-label" for="cbxAll">All</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="cbxNew">
-                                                <label class="custom-control-label" for="cbxNew">New</label>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="col-lg-6">
-                                    <ul class="list-unstyled mb-0">
-                                        <li>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="cbxActive">
-                                                <label class="custom-control-label" for="cbxActive">Active</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="cbxDelete">
-                                                <label class="custom-control-label" for="cbxDelete">Delete</label>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <p style="margin-bottom: 0; font-weight: bold" class="mb-1">Article name:</p>
+                            <p style="margin-bottom: 0; font-weight: bold" class="mb-2">Article name:</p>
                             <div class="input-group">
                                 <input class="form-control" type="text" placeholder="Title or keyword..." aria-label="Search" aria-describedby="basic-addon2" />
                                 <div class="input-group-append">

@@ -1,0 +1,11 @@
+body {
+    padding-top: 56px;
+}
+
+.card-body .btn {
+    width: 100px;
+}
+
+.card-body .btn-outline-secondary {
+    margin-left: 10px;
+}

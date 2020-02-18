@@ -20,6 +20,10 @@
         <c:if test="${empty user}">
             <c:redirect url="login.jsp"/>
         </c:if>
+        <c:if test="${not empty user and user.role eq 'admin'}">
+            <c:set value="${user.firstName}" var="firstNameAdmin"/>
+            <c:set value="${user.lastName}" var="lastNameAdmin"/>
+        </c:if>
         <!-- Navigation -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
             <div class="container">
@@ -36,20 +40,20 @@
                             </a>
                         </li>
                         <c:choose>
-                            <c:when test="${not empty user.firstName and not empty user.lastName}">
+                            <c:when test="${not empty firstNameAdmin and not empty lastNameAdmin}">
                                 <li class="nav-item">
                                     <div class="dropdown">
                                         <a class="nav-link dropdown-toggle" 
                                            href="#" role="button" id="dropdownMenuLink" 
                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            ${firstName}&nbsp;${lastName}
+                                            ${firstNameAdmin}&nbsp;${lastNameAdmin}
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="#">Write article</a>
+                                            <a class="dropdown-item" href="MainController?action=home">Blog Home</a>
                                             <a class="dropdown-item" href="#">Profile</a>
                                             <div class="dropdown-divider"></div>
-                                            <c:set value="MainController?action=Sign out" var="urlSignOut" />
-                                            <a class="dropdown-item" href="${urlSignOut}">Sign out</a>
+                                            <c:set value="MainController?action=logout" var="url" />
+                                            <a class="dropdown-item" href="${url}">Sign out</a>
                                         </div>
                                     </div> 
                                 </li>

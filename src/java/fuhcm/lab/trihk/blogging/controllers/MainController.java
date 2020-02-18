@@ -21,13 +21,19 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class MainController extends HttpServlet {
 
-    private final String LOGIN = "Sign in";
-    private final String REGISTER = "Sign up";
-    private final String LOGOUT = "Sign out";
+    private final String ACTION_LOGIN = "login";
+    private final String ACTION_REGISTER = "register";
+    private final String ACTION_LOGOUT = "logout";
+    private final String ACTION_HOME = "home";
+    private final String ACTION_WRITE = "write-blog";
+    private final String ACTION_SUBMIT = "submit";
     private final String homePage = "blog-home.jsp";
+    private final String writeBlogPage = "write-blog.jsp";
+    private final String homeServlet = "HomeServlet";
     private final String userLoginController = "UserLoginController";
     private final String userRegisterController = "UserRegisterController";
     private final String userLogoutController = "UserLogoutController";
+    private final String articleInsertServlet = "ArticleInsertServlet";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -49,14 +55,23 @@ public class MainController extends HttpServlet {
                     // do nothing -> home page
                 } else {
                     switch (action) {
-                        case LOGIN:
+                        case ACTION_HOME:
+                            url = homeServlet;
+                            break;
+                        case ACTION_LOGIN:
                             url = userLoginController;
                             break;
-                        case REGISTER:
+                        case ACTION_REGISTER:
                             url = userRegisterController;
                             break;
-                        case LOGOUT:
+                        case ACTION_LOGOUT:
                             url = userLogoutController;
+                            break;
+                        case ACTION_WRITE:
+                            url = writeBlogPage;
+                            break;
+                        case ACTION_SUBMIT:
+                            url = articleInsertServlet;
                             break;
                         default:
                             break;
