@@ -23,7 +23,7 @@
         <c:if test="${not empty user}">
             <c:choose>
                 <c:when test="${user.role eq 'admin'}">
-                    <c:redirect url="admin.jsp"/>
+                    <c:redirect url="MainController?action=admin"/>
                 </c:when>
                 <c:when test="${user.role eq 'member'}">
                     <c:set value="${user.firstName}" var="firstName"/>
@@ -37,7 +37,7 @@
         <!-- Navigation -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
             <div class="container">
-                <a class="navbar-brand" href="">Simple Blog</a>
+                <a class="navbar-brand" href="#">Simple Blog</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                         aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -45,7 +45,7 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="MainController?action=home">Home
+                            <a class="nav-link" href="MainController?action=home"><i class="fas fa-home"></i> Home
                                 <span class="sr-only">(current)</span>
                             </a>
                         </li>
@@ -59,8 +59,6 @@
                                             ${firstName}&nbsp;${lastName}
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="#">Profile</a>
-                                            <div class="dropdown-divider"></div>
                                             <c:set value="MainController?action=Sign out" var="urlSignOut" />
                                             <a class="dropdown-item" href="${urlSignOut}" >Sign out</a>
                                         </div>
@@ -94,7 +92,7 @@
                                 </div>
                                 <div class="form-group">
                                     <p style="margin-bottom: 0; font-weight: bold" class="mb-2">Description:</p>
-                                    <textarea class="form-control" name="txtDescription" rows="2" required></textarea>
+                                    <textarea class="form-control" name="txtDescription" rows="3" required></textarea>
                                 </div>
                                 <div class="form-group">
                                     <p style="margin-bottom: 0; font-weight: bold" class="mb-2">Content:</p>
@@ -113,12 +111,7 @@
         <!-- /.container -->
 
         <!-- Footer -->
-        <footer class="py-5 bg-dark">
-            <div class="container">
-                <p class="m-0 text-center text-white">Copyright 2019 &copy; TriHK-SE63285</p>
-            </div>
-            <!-- /.container -->
-        </footer>
+        <%@include file="sgmFooter.jspf" %>
 
         <!-- Bootstrap core JavaScript -->
         <script src="vendor/jquery/jquery.min.js"></script>

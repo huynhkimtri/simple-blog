@@ -150,6 +150,7 @@ public class UserDAO implements Serializable {
                 }
             }
         } catch (SQLException | NamingException e) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
         } finally {
             if (statement != null) {
                 statement.close();

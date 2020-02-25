@@ -11,7 +11,6 @@ import fuhcm.lab.trihk.blogging.dtos.UserDTO;
 import fuhcm.lab.trihk.blogging.utilities.Constants;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -33,7 +32,7 @@ import javax.servlet.http.HttpSession;
 public class ArticleInsertServlet extends HttpServlet {
 
     private final String errorPage = "500.html";
-    private final String homePage = "blog-home.jsp";
+    private final String success = "successfully.html";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -50,9 +49,10 @@ public class ArticleInsertServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             String path = errorPage;
             try {
-                String title = request.getParameter("txtTitle");
-                String description = request.getParameter("txtDescription");
-                String content = request.getParameter("txtContent");
+                String title = request.getParameter("txtTitle").trim();
+                String description = request.getParameter("txtDescription").trim();
+                String content = request.getParameter("txtContent").trim();
+                content = content.replaceAll("(\r\n|\n)", "<br>");
                 HttpSession session = request.getSession();
                 UserDTO member = (UserDTO) session.getAttribute("USER");
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
@@ -64,7 +64,7 @@ public class ArticleInsertServlet extends HttpServlet {
                     ArticleDAO dao = new ArticleDAO();
                     boolean result = dao.insertArticle(dto);
                     if (result) {
-                        path = homePage;
+                        path = success;
                     }
                 }
             } catch (SQLException e) {

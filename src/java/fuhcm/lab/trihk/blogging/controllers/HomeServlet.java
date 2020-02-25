@@ -5,8 +5,16 @@
  */
 package fuhcm.lab.trihk.blogging.controllers;
 
+import fuhcm.lab.trihk.blogging.daos.ArticleDAO;
+import fuhcm.lab.trihk.blogging.dtos.ArticleMapper;
+import fuhcm.lab.trihk.blogging.utilities.Constants;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,6 +27,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "HomeServlet", urlPatterns = {"/HomeServlet"})
 public class HomeServlet extends HttpServlet {
+
+    private final String homePage = "blog-home.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,8 +43,45 @@ public class HomeServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            String path = homePage;
+            ArticleDAO dao = new ArticleDAO();
+            try {
+                int totalResults = dao.getRowsCount(Constants.EMPTY_STRING, Constants.STATUS_ARTICLE_ACTIVE);
 
+                double a = (totalResults / (double) Constants.SIZE);
+                int b = totalResults / Constants.SIZE;
+                int numberOfPages = 1;
+                int pageNum = 1;
+                int start = pageNum * Constants.SIZE - Constants.SIZE + 1;
+                int stop = pageNum * Constants.SIZE;
+
+                if (a == 0) {
+                    numberOfPages = 1;
+                }
+                if (b > a) {
+                    if (b % a > 0) {
+                        numberOfPages = (int) (b - b % a + a);
+                    }
+                }
+                if (a >= b) {
+                    numberOfPages = (int) a + 1;
+                }
+
+                request.setAttribute("NUMBER_OF_PAGES", numberOfPages);
+                request.setAttribute("PAGE_NUMBER", pageNum);
+
+                dao.getListArticleAndAuthorPagingByTitleAndStatus(Constants.EMPTY_STRING, Constants.STATUS_ARTICLE_ACTIVE, start, stop);
+                List<ArticleMapper> list = dao.getListArticlesMapper();
+                request.setAttribute("LIST_ARTICLES", list);
+
+            } catch (SQLException ex) {
+                Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                RequestDispatcher rd = request.getRequestDispatcher(path);
+                rd.forward(request, response);
+            }
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

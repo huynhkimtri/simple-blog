@@ -14,7 +14,7 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>blog-home.jsp</welcome-file>
+        <welcome-file>MainController</welcome-file>
     </welcome-file-list>
     <resource-ref>
         <res-ref-name>SimpleBlog</res-ref-name>

@@ -11,6 +11,9 @@ package fuhcm.lab.trihk.blogging.utilities;
  */
 public class Constants {
 
+    public static final int SIZE = 4;
+    public static final String EMPTY_STRING = "";
+
     public static final String USER_ROLE_ADMIN = "admin";
     public static final String USER_ROLE_MEMBER = "member";
 

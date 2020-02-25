@@ -6,7 +6,6 @@
 package fuhcm.lab.trihk.blogging.dtos;
 
 import java.io.Serializable;
-import java.sql.Date;
 
 /**
  *

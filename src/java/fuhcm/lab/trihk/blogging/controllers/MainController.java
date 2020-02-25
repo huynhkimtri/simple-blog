@@ -5,6 +5,7 @@
  */
 package fuhcm.lab.trihk.blogging.controllers;
 
+import fuhcm.lab.trihk.blogging.utilities.Constants;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -27,13 +28,27 @@ public class MainController extends HttpServlet {
     private final String ACTION_HOME = "home";
     private final String ACTION_WRITE = "write-blog";
     private final String ACTION_SUBMIT = "submit";
-    private final String homePage = "blog-home.jsp";
+    private final String ACTION_SEARCH = "search";
+    private final String ACTION_VIEW = "view";
+    private final String ACTION_ACTIVE = "active";
+    private final String ACTION_DELETE = "delete";
+    private final String ACTION_ADMIN = "admin";
+    private final String ACTION_COMMENT = "comment";
+
     private final String writeBlogPage = "write-blog.jsp";
+    
     private final String homeServlet = "HomeServlet";
-    private final String userLoginController = "UserLoginController";
-    private final String userRegisterController = "UserRegisterController";
-    private final String userLogoutController = "UserLogoutController";
+    private final String homeAdminServlet = "HomeAdminServlet";
+    private final String userLoginServlet = "UserLoginServlet";
+    private final String userRegisterServlet = "UserRegisterServlet";
+    private final String userLogoutServlet = "UserLogoutServlet";
     private final String articleInsertServlet = "ArticleInsertServlet";
+    private final String articleSearchMemberServlet = "ArticleSearchMemberServlet";
+    private final String articleSearchAdminServlet = "ArticleSearchAdminServlet";
+    private final String articleDetailServlet = "ArticleDetailServlet";
+    private final String articleDeteleServlet = "ArticleDeteleServlet";
+    private final String articleActiveServlet = "ArticleActiveServlet";
+    private final String userCommentServlet = "UserCommentServlet";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -49,29 +64,56 @@ public class MainController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             String action = request.getParameter("action");
-            String url = homePage;
+            String url = homeServlet;
             try {
                 if (action == null) {
-                    // do nothing -> home page
+                    url = homeServlet;
                 } else {
                     switch (action) {
                         case ACTION_HOME:
                             url = homeServlet;
                             break;
+                        case ACTION_ADMIN:
+                            url = homeAdminServlet;
+                            break;
                         case ACTION_LOGIN:
-                            url = userLoginController;
+                            url = userLoginServlet;
                             break;
                         case ACTION_REGISTER:
-                            url = userRegisterController;
+                            url = userRegisterServlet;
                             break;
                         case ACTION_LOGOUT:
-                            url = userLogoutController;
+                            url = userLogoutServlet;
                             break;
                         case ACTION_WRITE:
                             url = writeBlogPage;
                             break;
                         case ACTION_SUBMIT:
                             url = articleInsertServlet;
+                            break;
+                        case ACTION_COMMENT:
+                            url = userCommentServlet;
+                            break;
+                        case ACTION_SEARCH:
+                            String role = request.getParameter("role");
+                            if (role != null) {
+                                if (role.equals(Constants.USER_ROLE_ADMIN)) {
+                                    // for admin
+                                    url = articleSearchAdminServlet;
+                                } else {
+                                    // for memeber
+                                    url = articleSearchMemberServlet;
+                                }
+                            }
+                            break;
+                        case ACTION_VIEW:
+                            url = articleDetailServlet;
+                            break;
+                        case ACTION_DELETE:
+                            url = articleDeteleServlet;
+                            break;
+                        case ACTION_ACTIVE:
+                            url = articleActiveServlet;
                             break;
                         default:
                             break;
